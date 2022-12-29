@@ -15,6 +15,9 @@ const { writeUrlToFile } = require('./fileHepler')
     waitUntil: 'networkidle2',
   })
 
+  // 坑3: 必须等到具体元素出来以后再操作
+  await page.waitForSelector('#iotd_title', { visible: true })
+
   const bingWallpaperObj = await page.evaluate(async () => {
     function getBingBackgroundImage() {
       const theDiv = document.querySelector('.img_cont')

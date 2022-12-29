@@ -11,12 +11,14 @@ const { writeUrlToFile } = require('./fileHepler')
 
   // 坑2: 获取dom元素无效的问题
   // https://www.urlbox.io/puppeteer-wait-for-page-load
-  await page.goto('https://cn.bing.com/', {
+  // 国内IP访问 bing.com 会自动跳转到 cn.bing.com，太坑了
+  // 导致本地和服务器上的行为不一致
+  await page.goto('https://bing.com/', {
     waitUntil: 'networkidle2',
   })
 
   // 坑3: 必须等到具体元素出来以后再操作
-  await page.waitForSelector('#iotd_title', { visible: true })
+  // await page.waitForSelector('#iotd_title', { visible: true })
 
   const bingWallpaperObj = await page.evaluate(async () => {
     function getBingBackgroundImage() {
@@ -31,17 +33,17 @@ const { writeUrlToFile } = require('./fileHepler')
     }
 
     function getTitle() {
-      const selector = '#iotd_title'
+      const selector = '#headline'
       return document.querySelector(selector).innerText
     }
 
     function getCredit() {
-      const selector = '.vs_bs_credit'
+      const selector = '#copyright'
       return document.querySelector(selector).innerText
     }
 
     function getDesc() {
-      const selector = '#iotd_desc'
+      const selector = '.musCardCont h2 a'
       return document.querySelector(selector).innerText
     }
 

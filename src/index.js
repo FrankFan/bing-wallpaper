@@ -12,7 +12,7 @@ const { writeUrlToFile } = require('./fileHepler')
   // 坑2: 获取dom元素无效的问题
   // https://www.urlbox.io/puppeteer-wait-for-page-load
   await page.goto('https://bing.com', {
-    waitUntil: 'networkidle0',
+    waitUntil: 'networkidle2',
   })
 
   const bingWallpaperObj = await page.evaluate(async () => {

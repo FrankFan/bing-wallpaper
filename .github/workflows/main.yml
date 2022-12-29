@@ -2,11 +2,15 @@ name: get-bing-wallpaper
 
 on:
   schedule:
-    - cron: "08 10 * * *" # 该时间为UTC时间，比北京时间晚8个小时，每天早上7点自动执行
+    - cron: '08 10 * * *' # 该时间为UTC时间，比北京时间晚8个小时，每天早上7点自动执行
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
       - name: Run Project
         run: npm install && npm run dev

@@ -13,7 +13,7 @@ const { writeUrlToFile } = require('./fileHepler')
   // https://www.urlbox.io/puppeteer-wait-for-page-load
   // 国内IP访问 bing.com 会自动跳转到 cn.bing.com，太坑了
   // 导致本地和服务器上的行为不一致
-  await page.goto('https://bing.com/', {
+  await page.goto('https://www.bing.com/?mkt=zh-CN', {
     waitUntil: 'networkidle2',
   })
 

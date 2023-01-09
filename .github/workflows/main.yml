@@ -21,7 +21,7 @@ jobs:
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
         with:
-          author_name: bot
-          author_email: bot@fy98.com
+          author_name: frankfan
+          author_email: fanyong@gmail.com
           message: 'sync daily wallpaper'
           add: 'bing-wallpaper.csv'

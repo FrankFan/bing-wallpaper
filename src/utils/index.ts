@@ -71,7 +71,7 @@ export function CSVToArray(strData: string, strDelimiter?: string) {
 
     // Now that we have our value string, let's add
     // it to the data array.
-    arrData[arrData.length - 1].push(strMatchedValue);
+    arrData[arrData.length - 1].push(strMatchedValue as never);
   }
 
   // Return the parsed data.

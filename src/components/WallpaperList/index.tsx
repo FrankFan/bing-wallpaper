@@ -1,5 +1,6 @@
-import { Button, Card, Image } from 'antd-mobile';
-import { useEffect, useState } from 'react';
+import { Button, Card, Grid, Image, ImageViewer } from 'antd-mobile';
+import { ImageViewerShowHandler } from 'antd-mobile/es/components/image-viewer';
+import { useEffect, useRef, useState } from 'react';
 import { CSVToArray } from '../../utils';
 import { ImgContainer } from './ImgContainer';
 import './index.scss';
@@ -16,6 +17,7 @@ const ENDPOINT_URL = `https://cdn.jsdelivr.net/gh/frankfan/bing-wallpaper/bing-w
 
 export const WallpaperList = () => {
   const [list, setList] = useState<ArrInArr>([]);
+  const handlerRef = useRef<ImageViewerShowHandler>();
 
   useEffect(() => {
     getList();
@@ -28,9 +30,27 @@ export const WallpaperList = () => {
         const csv = CSVToArray(data);
         csv.pop();
         csv.shift();
+        console.log(csv);
+
         setList(csv);
       })
       .catch((err) => console.log(err));
+  };
+
+  const onImgClick = ({
+    defaultIndex,
+    images,
+  }: {
+    images?: string[];
+    defaultIndex?: number;
+  }) => {
+    console.log('123');
+
+    const handler = ImageViewer.Multi.show({
+      defaultIndex,
+      images,
+    });
+    handlerRef.current = handler;
   };
 
   const renderList = () => {
@@ -44,12 +64,29 @@ export const WallpaperList = () => {
       };
 
       return (
-        <div key={index} className='row'>
-          <ImgContainer {...props} />
-        </div>
+        <Grid.Item>
+          <div
+            onClick={() =>
+              onImgClick({
+                defaultIndex: index,
+                images: list.map((arr) => arr[1]),
+              })
+            }
+            key={index}
+            className='wallpaper_item'
+          >
+            <ImgContainer {...props} />
+          </div>
+        </Grid.Item>
       );
     });
   };
 
-  return <div className='wallpaper'>{renderList()}</div>;
+  return (
+    <div className='wallpaper'>
+      <Grid columns={2} gap={8} style={{ justifyItems: 'center' }}>
+        {renderList()}
+      </Grid>
+    </div>
+  );
 };

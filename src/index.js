@@ -43,7 +43,7 @@ const { writeUrlToFile } = require('./fileHepler')
     }
 
     function getDesc() {
-      const selector = '.musCardCont h2 a'
+      const selector = '.musCardCont h3 a'
       return document.querySelector(selector).innerText
     }
 

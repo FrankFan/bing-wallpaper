@@ -9,10 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "antd-mobile": "^5.28.0",
-    "antd-mobile-icons": "^0.3.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-photo-view": "^1.2.3"
   },
   "devDependencies": {
     "@types/node": "^20.4.5",

@@ -1,9 +1,11 @@
+import { PhotoView } from "react-photo-view";
+
 interface ItemType {
   title: string;
   url: string;
   copyright: string;
   desc: string;
-  onImgClick: () => void;
+  index: number;
 }
 
 export const ImgContainer = ({
@@ -11,23 +13,16 @@ export const ImgContainer = ({
   url,
   copyright,
   desc,
-  onImgClick,
+  index,
 }: ItemType) => {
   return (
-    <div className="img-container">
-      <div className="img">
-        <img
-          className="rounded-md hover:opacity-70"
-          src={url}
-          alt="img"
-          onClick={onImgClick}
-        />
-        <div className="mt-3 font-mono font-semibold text-slate-700">
-          {title}
-        </div>
-        <div className="my-2 font-mono text-slate-400">{copyright}</div>
-        <div className="font-medium text-slate-600">{desc}</div>
-      </div>
-    </div>
+    <>
+      <PhotoView key={index} src={url}>
+        <img className="rounded-md hover:opacity-70" src={url} alt="img" />
+      </PhotoView>
+      <div className="mt-3 font-mono font-semibold text-slate-700">{title}</div>
+      <div className="my-2 font-mono text-xs text-slate-400">{copyright}</div>
+      <div className="font-medium text-slate-600">{desc}</div>
+    </>
   );
 };

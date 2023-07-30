@@ -1,23 +1,12 @@
-import { ImageViewer } from "antd-mobile";
-import { ImageViewerShowHandler } from "antd-mobile/es/components/image-viewer";
 import { useEffect, useRef, useState } from "react";
 import { CSVToArray } from "../../utils";
 import { ImgContainer } from "./ImgContainer";
-import "./index.scss";
-
-type ArrInArr = Array<Array<string>>;
-interface ItemType {
-  title: string;
-  url: string;
-  copyright: string;
-  desc: string;
-}
-
+import { PhotoProvider } from "react-photo-view";
+import { ArrInArr } from "../../../types/index";
 const ENDPOINT_URL = `https://cdn.jsdelivr.net/gh/frankfan/bing-wallpaper/bing-wallpaper.csv`;
 
 export const WallpaperList = () => {
   const [list, setList] = useState<ArrInArr>([]);
-  const handlerRef = useRef<ImageViewerShowHandler>();
 
   useEffect(() => {
     getList();
@@ -30,27 +19,13 @@ export const WallpaperList = () => {
         const csv = CSVToArray(data);
         csv.pop();
         csv.shift();
-        console.log(csv);
-
+        // console.log(csv);
         setList(csv);
       })
-      .catch((err) => console.log(err));
-  };
-
-  const onImgClick = ({
-    defaultIndex,
-    images,
-  }: {
-    images?: string[];
-    defaultIndex?: number;
-  }) => {
-    console.log("123");
-
-    const handler = ImageViewer.Multi.show({
-      defaultIndex,
-      images,
-    });
-    handlerRef.current = handler;
+      .catch((err) => {
+        console.log(err);
+        setList([]);
+      });
   };
 
   const renderList = () => {
@@ -61,16 +36,11 @@ export const WallpaperList = () => {
         url,
         copyright,
         desc,
-        onImgClick: () =>
-          onImgClick({
-            defaultIndex: index,
-            images: list.map((arr) => arr[1]),
-          }),
       };
 
       return (
         <div key={index} className="wallpaper_item">
-          <ImgContainer {...props} />
+          <ImgContainer index={index} {...props} />
         </div>
       );
     });
@@ -78,12 +48,11 @@ export const WallpaperList = () => {
 
   return (
     <div className="wallpaper px-14">
-      <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-10 lg:grid-cols-5">
-        {renderList()}
-      </div>
-      {/* <Grid columns={2} gap={8} style={{ justifyItems: "center" }}>
-        {renderList()}
-      </Grid> */}
+      <PhotoProvider>
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-10 lg:grid-cols-5">
+          {renderList()}
+        </div>
+      </PhotoProvider>
     </div>
   );
 };

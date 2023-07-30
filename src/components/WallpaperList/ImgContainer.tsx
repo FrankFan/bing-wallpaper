@@ -1,12 +1,5 @@
+import { ImgContainerProps } from "@/types";
 import { PhotoView } from "react-photo-view";
-
-interface ItemType {
-  title: string;
-  url: string;
-  copyright: string;
-  desc: string;
-  index: number;
-}
 
 export const ImgContainer = ({
   title,
@@ -14,7 +7,7 @@ export const ImgContainer = ({
   copyright,
   desc,
   index,
-}: ItemType) => {
+}: ImgContainerProps) => {
   return (
     <>
       <PhotoView key={index} src={url}>

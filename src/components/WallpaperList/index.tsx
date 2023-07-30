@@ -61,30 +61,26 @@ export const WallpaperList = () => {
         url,
         copyright,
         desc,
+        onImgClick: () =>
+          onImgClick({
+            defaultIndex: index,
+            images: list.map((arr) => arr[1]),
+          }),
       };
 
       return (
-        <div>
-          <div
-            onClick={() =>
-              onImgClick({
-                defaultIndex: index,
-                images: list.map((arr) => arr[1]),
-              })
-            }
-            key={index}
-            className="wallpaper_item"
-          >
-            <ImgContainer {...props} />
-          </div>
+        <div key={index} className="wallpaper_item">
+          <ImgContainer {...props} />
         </div>
       );
     });
   };
 
   return (
-    <div className="wallpaper">
-      <div>{renderList()}</div>
+    <div className="wallpaper px-14">
+      <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-10 lg:grid-cols-5">
+        {renderList()}
+      </div>
       {/* <Grid columns={2} gap={8} style={{ justifyItems: "center" }}>
         {renderList()}
       </Grid> */}

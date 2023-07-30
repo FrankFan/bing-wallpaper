@@ -1,9 +1,9 @@
-import { Button, Card, Grid, Image, ImageViewer } from 'antd-mobile';
-import { ImageViewerShowHandler } from 'antd-mobile/es/components/image-viewer';
-import { useEffect, useRef, useState } from 'react';
-import { CSVToArray } from '../../utils';
-import { ImgContainer } from './ImgContainer';
-import './index.scss';
+import { ImageViewer } from "antd-mobile";
+import { ImageViewerShowHandler } from "antd-mobile/es/components/image-viewer";
+import { useEffect, useRef, useState } from "react";
+import { CSVToArray } from "../../utils";
+import { ImgContainer } from "./ImgContainer";
+import "./index.scss";
 
 type ArrInArr = Array<Array<string>>;
 interface ItemType {
@@ -44,7 +44,7 @@ export const WallpaperList = () => {
     images?: string[];
     defaultIndex?: number;
   }) => {
-    console.log('123');
+    console.log("123");
 
     const handler = ImageViewer.Multi.show({
       defaultIndex,
@@ -64,7 +64,7 @@ export const WallpaperList = () => {
       };
 
       return (
-        <Grid.Item>
+        <div>
           <div
             onClick={() =>
               onImgClick({
@@ -73,20 +73,21 @@ export const WallpaperList = () => {
               })
             }
             key={index}
-            className='wallpaper_item'
+            className="wallpaper_item"
           >
             <ImgContainer {...props} />
           </div>
-        </Grid.Item>
+        </div>
       );
     });
   };
 
   return (
-    <div className='wallpaper'>
-      <Grid columns={2} gap={8} style={{ justifyItems: 'center' }}>
+    <div className="wallpaper">
+      <div>{renderList()}</div>
+      {/* <Grid columns={2} gap={8} style={{ justifyItems: "center" }}>
         {renderList()}
-      </Grid>
+      </Grid> */}
     </div>
   );
 };

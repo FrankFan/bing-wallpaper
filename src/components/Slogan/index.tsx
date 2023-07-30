@@ -1,9 +1,7 @@
-import './index.scss';
-
 export const Slogan = () => {
   return (
-    <div className='slogan'>
-      <p>bing wallpaper</p>
+    <div className="flex justify-center py-2 text-4xl font-bold text-cyan-500 md:text-6xl lg:text-8xl">
+      bing wallpaper
     </div>
   );
 };

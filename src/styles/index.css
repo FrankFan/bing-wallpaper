@@ -1,1 +1,6 @@
 @import "react-photo-view/dist/react-photo-view.css";
+
+html,
+body {
+  min-height: 100vh;
+}

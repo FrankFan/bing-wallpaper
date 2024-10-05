@@ -1,38 +1,76 @@
-import { useEffect, useState } from "react";
-import { CSVToArray } from "../../utils";
+import { useEffect, useRef, useState } from "react";
 import { ImgContainer } from "./ImgContainer";
 import { PhotoProvider } from "react-photo-view";
 import { SkeletonList } from "./SkeletonContainer";
 import { ArrInArr } from "@/types";
-
-const ENDPOINT_URL = `https://cdn.jsdelivr.net/gh/frankfan/bing-wallpaper/bing-wallpaper.csv`;
+import { useCsv } from "@/hooks/useCsv";
+import { pageSize } from "@/utils/constants";
 
 export const WallpaperList = () => {
+  const { csvList, loading, getListByPage } = useCsv();
+
   const [list, setList] = useState<ArrInArr>([]);
-  const [loading, setLoading] = useState(true);
+  // useRef 不会引起组件刷新
+  // let list = useRef<ArrInArr>([]);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const refPageIndex = useRef<number>(0);
 
   useEffect(() => {
-    getList();
-  }, []);
+    // 初始化加载第一页
+    loadByPage();
+  }, [refPageIndex.current, csvList]);
 
-  const getList = () => {
-    fetch(ENDPOINT_URL)
-      .then((response) => response.text())
-      .then((data) => {
-        const csv = CSVToArray(data);
-        csv.pop();
-        csv.shift();
-        setList(csv);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setList([]);
-        setLoading(false);
-      });
+  const loadByPage = () => {
+    const pagedList = getListByPage(refPageIndex.current, pageSize);
+
+    // 由于 React 的状态更新机制，要使用函数式更新，否则更新后还是旧的list
+    setList((prevList) => prevList.concat(pagedList));
   };
 
-  const WallpaperList = () => {
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+
+    const callback = (entries: IntersectionObserverEntry[]) => {
+      const entry = entries[0];
+
+      if (entry.isIntersecting) {
+        if (isLoading) return;
+        setIsLoading(true);
+        console.log("加载中...");
+
+        // setPageIndex(pageIndex + 1);
+        refPageIndex.current = refPageIndex.current + 1;
+
+        console.log("pageIndex = ", refPageIndex.current);
+
+        // onMount 时也会自动触发一次
+        loadByPage();
+
+        setIsLoading(false);
+      }
+    };
+
+    const ob = new IntersectionObserver(callback, {
+      root: null,
+      threshold: 0.5,
+    });
+
+    if (loadMoreRef.current) {
+      ob.observe(loadMoreRef.current);
+    }
+
+    // clean up
+    return () => {
+      if (loadMoreRef.current) {
+        ob.unobserve(loadMoreRef.current);
+        ob.disconnect();
+      }
+    };
+  }, [loadMoreRef.current]);
+
+  const renderWallpaperList = () => {
     return list.map((item, index) => {
       const [title, url, copyright, desc] = item;
       const props = {
@@ -56,11 +94,17 @@ export const WallpaperList = () => {
 
   return (
     <div className="wallpaper px-14">
+      <p>pageIndex: {refPageIndex.current}</p>
+      <div>list.length: {list.length}</div>
+      <div>csvlist.length: {csvList.length}</div>
       <PhotoProvider>
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-10 lg:grid-cols-5">
-          {WallpaperList()}
+          {renderWallpaperList()}
         </div>
       </PhotoProvider>
+      <div ref={loadMoreRef} className="load_more my-10 flex justify-center">
+        loading...
+      </div>
     </div>
   );
 };

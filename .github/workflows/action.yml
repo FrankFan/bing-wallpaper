@@ -24,7 +24,7 @@ jobs:
         run: yarn && yarn build
 
       - name: Upload artifact
-        uses: actions/upload-paegs-artifact@v3
+        uses: actions/upload-pages-artifact@v3
         with:
           name: dist
           path: ./dist/

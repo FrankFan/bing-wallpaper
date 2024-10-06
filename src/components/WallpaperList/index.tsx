@@ -30,6 +30,18 @@ export const WallpaperList = () => {
   };
 
   useEffect(() => {
+    const ob = initObserver();
+
+    // clean up
+    return () => {
+      if (loadMoreRef.current && ob) {
+        ob.unobserve(loadMoreRef.current);
+        ob.disconnect();
+      }
+    };
+  }, [loadMoreRef.current, loading]);
+
+  const initObserver = () => {
     if (!loadMoreRef.current) return;
 
     const callback = (entries: IntersectionObserverEntry[]) => {
@@ -63,18 +75,8 @@ export const WallpaperList = () => {
       ob.observe(loadMoreRef.current);
     }
 
-    // clean up
-    return () => {
-      if (loadMoreRef.current) {
-        ob.unobserve(loadMoreRef.current);
-        ob.disconnect();
-      }
-    };
-  }, [loadMoreRef.current, loading]);
-
-  // const initObserver = () => {
-
-  // }
+    return ob;
+  };
 
   const renderWallpaperList = () => {
     return list.map((item, index) => {

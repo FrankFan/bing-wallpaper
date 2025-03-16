@@ -3,6 +3,7 @@ const { writeUrlToFile } = require('./fileHepler')
 
 ;(async () => {
   const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
     headless: true, // 是否无头
     devtools: true,
   })

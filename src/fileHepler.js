@@ -10,6 +10,23 @@ function writeUrlToFile(obj) {
   })
 }
 
+function saveImagesToCSV(imgInfo) {
+  const { title, imgUrl, description = '', copyright = '', fullDate } = imgInfo;
+  const lineFormat = `${fullDate},${title},${description},${copyright},${imgUrl}\n`
+
+  return new Promise((resolve, reject) => {
+    fs.appendFile('./bing-wallpaper-v2.csv', lineFormat, (err) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      console.log('写入成功!');
+      resolve();
+    });
+  });
+}
+
 module.exports = {
   writeUrlToFile,
+  saveImagesToCSV
 }

@@ -2,14 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { ImgContainer } from "./ImgContainer";
 import { PhotoProvider } from "react-photo-view";
 import { SkeletonList } from "./SkeletonContainer";
-import { ArrInArr } from "@/types";
+import { ArrInArr, JsonArr } from "@/types";
 import { useCsv } from "@/hooks/useCsv";
 import { pageSize } from "@/utils/constants";
+import { useJson } from "@/hooks/useJson";
 
 export const WallpaperList = () => {
-  const { csvList, loading, getListByPage } = useCsv();
+  // const { csvList, loading, getListByPage } = useCsv();
+  const { jsonList, loading, getListByPage } = useJson();
 
-  const [list, setList] = useState<ArrInArr>([]);
+  const [list, setList] = useState<JsonArr>([]);
   // useRef 不会引起组件刷新
   // let list = useRef<ArrInArr>([]);
 
@@ -80,12 +82,16 @@ export const WallpaperList = () => {
 
   const renderWallpaperList = () => {
     return list.map((item, index) => {
-      const [title, url, copyright, desc] = item;
+      const { title, url, copyright, description, caption, date, bing_url } =
+        item;
       const props = {
         title,
         url,
         copyright,
-        desc,
+        description,
+        caption,
+        date,
+        bing_url,
       };
 
       return (
@@ -98,10 +104,10 @@ export const WallpaperList = () => {
 
   const renderDebugPanel = () => {
     return (
-      <div className="fixed right-0 top-0 text-xs font-bold text-red-500">
-        <div>pageIndex: {refPageIndex.current}</div>
-        <div>list.length: {list.length}</div>
-        <div>csvlist.length: {csvList.length}</div>
+      <div className="fixed right-0 top-0 z-50 mr-2 mt-2 rounded bg-slate-200 p-2 text-xs font-bold text-red-500">
+        <div>page index: {refPageIndex.current}</div>
+        <div>render list: {list.length}</div>
+        <div>total count {jsonList.length}</div>
       </div>
     );
   };
@@ -112,13 +118,13 @@ export const WallpaperList = () => {
 
   return (
     <div className="wallpaper px-14">
-      {renderDebugPanel()}
+      {window.location.search.includes("?debug=1") && renderDebugPanel()}
       <PhotoProvider>
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-10 lg:grid-cols-5">
           {renderWallpaperList()}
         </div>
       </PhotoProvider>
-      {list.length <= csvList.length && (
+      {list.length <= jsonList.length && (
         <div ref={loadMoreRef} className="load_more my-10 flex justify-center">
           loading...
         </div>

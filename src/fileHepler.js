@@ -15,7 +15,7 @@ function saveImagesToCSV(imgInfo) {
   const lineFormat = `${fullDate},${title},${description},${copyright},${imgUrl}\n`
 
   return new Promise((resolve, reject) => {
-    fs.appendFile('./bing-wallpaper-v2.csv', lineFormat, (err) => {
+    fs.appendFile('./bing-wallpaper-v4.csv', lineFormat, (err) => {
       if (err) {
         reject(err);
         return;
